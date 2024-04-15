@@ -16,6 +16,11 @@ class PopoverContentController: UIViewController {
         setup()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        segmentedButton.selectedSegmentIndex = 0
+        segmentHandler?(0)
+    }
+    
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             segmentHandler?(0)
@@ -26,21 +31,18 @@ class PopoverContentController: UIViewController {
     }
     
     @objc func closeButtonDidTap() {
-        self.dismiss(animated: true) { [weak self] in
-            self?.segmentHandler?(0)
-            self?.segmentedButton.selectedSegmentIndex = 0
-        }
+        self.dismiss(animated: true)
     }
     
-    var containerView = UIView()
-    var segmentedButton: UISegmentedControl = {
+    private var containerView = UIView()
+    private var segmentedButton: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
         segmentedControl.insertSegment(withTitle: "280pt", at: 0, animated: true)
         segmentedControl.insertSegment(withTitle: "150pt", at: 1, animated: true)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
         return segmentedControl
     }()
-    var closeButton: UIButton = {
+    private var closeButton: UIButton = {
         let button = UIButton(type: .close)
         button.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
         return button
